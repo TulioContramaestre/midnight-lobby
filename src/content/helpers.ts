@@ -22,6 +22,19 @@ export const pickDate = (who: CharacterId, text: string): Choice => ({
   effects: [{ type: 'pickDate', who }],
 })
 
+export function scene(scene: {
+  id: string
+  title: string
+  day: number
+  slot: number
+  cast: CharacterId[]
+  lines: Line[]
+  choices: Choice[]
+}): Scene {
+  const { lines, choices, ...rest } = scene
+  return { ...rest, variants: [{ lines, choices }] }
+}
+
 type TierVariant = Omit<SceneVariant, 'when'>
 
 export function tiered(scene: {
