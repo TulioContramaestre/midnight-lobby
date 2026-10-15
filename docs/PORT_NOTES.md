@@ -5,7 +5,8 @@ The source of truth is `reference/midnight_lobby_dating_sim_v4.html` (gitignored
 - where every part of it went,
 - the content counts the parity test checks,
 - the quirks kept on purpose,
-- the decisions made during the port.
+- the decisions made during the port,
+- how the port was verified and what still looks different.
 
 ## Inventory
 
@@ -218,6 +219,31 @@ Day numbers in this table are 1-based (Monday = day 1). In code, `day` is 0-base
 
 - One a11y-only difference: the creation preview avatar's aria-label follows the gamertag as you type. In the reference it updates only on the next full render.
 
+## Verification
+
+These checks ran in a scratch harness outside the repo, against the reference file, before `reference/` was deleted. Each one was also run against a deliberately planted error, to confirm it fails.
+
+- **Content.** Every table compared field by field, every `narr()` over 1,000 seeds, and starting affection for every age (18–35) and height (60–80 inches).
+- **Behaviour.** 400 random seeded playthroughs (38,715 actions) run on the reference and on the port's reducer, comparing state and RNG after every action.
+- **Markup.** After every step of 150 playthroughs (13,866 renders, plus the intro), the port's markup matches the reference's `#app`: the same elements, attributes, inline styles and text.
+- **Layout.** Every element's box matches across the three scripted playthroughs at 792px (7,905 boxes).
+- **Without the reference.** `npm run typecheck`, `lint`, `test` and `build` all pass with `reference/` removed.
+
 ## Visual differences
 
-Recorded after the screen-by-screen comparison (phase 5).
+The comparison method:
+
+- **What ran.** The reference file and the port (`vite preview`), with the same seed on both sides, screenshotted after every step of the three scripted playthroughs (one per girl, 249 steps).
+- **Configurations.** 792px light and dark, 390px light and dark, and 320px light: 1,245 screenshot pairs in all.
+- **Comparison.** Headless Chromium at 1× scale, compared with pixelmatch at threshold 0.1.
+
+Results:
+
+- **Page size.** Identical at every step in every configuration. Neither version scrolls sideways at 390px or 320px.
+- **Icons.** The only difference a player would see.
+  - The port draws inline SVG (`@tabler/icons-react` 3.49), while the reference used the tabler-icons webfont (3.42).
+  - Glyphs and positions match, but the edges antialias slightly differently: at most 203 pixels per screen, about 140 on average.
+- **Focus rings.** 9 steps per configuration (about 2,800 pixels each), all on the create screen.
+  - The gamertag box still shows its focus ring in the port, because the harness sets sliders and selects by script without moving focus. By then the reference had rebuilt the page and dropped focus.
+  - In real use the player clicks the next control, so what they see is the select behaviour described under Decisions → UI → Focus.
+- **Not compared.** Firefox and Safari. Older Safari ignores `ascent-override`, so icon rows may be up to a pixel taller there (see Decisions → UI).
