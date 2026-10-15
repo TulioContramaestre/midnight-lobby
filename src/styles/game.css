@@ -1,0 +1,10 @@
+.ed .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.ed button.ch{display:block;width:100%;text-align:left;padding:10px 14px;margin:8px 0 0;line-height:1.5;height:auto;white-space:normal;font-size:15px}
+.ed .tag{font-size:12px;padding:2px 8px;border-radius:var(--radius);display:inline-flex;align-items:center;gap:4px}
+.ed .card{background:var(--surface-2);border:0.5px solid var(--border);border-radius:12px;padding:1rem 1.25rem}
+.ed .ln{margin:6px 0;font-size:15px;line-height:1.6}
+.ed .tabs button.on{background:var(--surface-1);border-color:var(--border-stronger)}
+.ed .post{display:flex;gap:12px;padding:12px 0;border-top:0.5px solid var(--border)}
+.ed .lbl{display:flex;justify-content:space-between;font-size:13px;color:var(--text-secondary);margin:12px 0 4px}
+.ed .locked{padding:10px 14px;margin:8px 0 0;border:0.5px dashed var(--border-strong);border-radius:var(--radius);color:var(--text-muted);font-size:15px}
+.ed .sub{display:block;font-size:13px;color:var(--text-secondary);margin-top:2px}
