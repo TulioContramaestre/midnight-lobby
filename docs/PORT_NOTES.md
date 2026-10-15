@@ -124,6 +124,22 @@ The source of truth is `reference/midnight_lobby_dating_sim_v4.html` (gitignored
 
 Day numbers in this table are 1-based (Monday = day 1). In code, `day` is 0-based.
 
+## Content conventions
+
+- **Scene ids** are `d<day>-<title-slug>` with a 1-based day, for example `d7-who-do-you-choose`. The scene's `day` field is 0-based, like the reference's `DAYS` index.
+- **Templated text.** Text the reference built by concatenation is now a template with placeholders, filled by the engine:
+  - feed notes in `src/content/feedNotes.ts` (`{name}`, `{others}`, `{target}`);
+  - milestone labels and narration in `activities/milestones.ts` (`{n}`, `{prev}`, `{name}`);
+  - Queue/Watch labels in `activities/games.ts` and `activities/watch.ts` (`{n}`);
+  - ending modifiers in `src/content/scoring.ts` (`{name}`, `{names}`).
+- **Per-girl milestone values.** Each girl's pfp and sleep-call gain (`ACT.pfp.f`, `ACT.sleep.f`) is in her `milestones.ts`. The repeat sleep-call gain (+1) and the pfp-switch penalty (−3) are in `activities/milestones.ts`.
+- **Extra posts.** An extra post's `order` is its index in the reference's `POSTS[d].x`, which keeps the feed order.
+- **Assembly and checks.** `src/content/registry.ts` assembles everything, and `src/content/validate.ts` checks it (run by `src/content/__tests__/validate.test.ts`).
+- **How the content was copied.** The data files were generated once from the reference tables by a throwaway script, so every string is copied exactly. Dynamic lines and `narrate` functions were written by hand. Everything was then checked against the reference in a scratch harness:
+  - every table, field by field;
+  - every `narr()` over 1,000 seeds;
+  - 400 random seeded playthroughs, compared state by state.
+
 ## Quirks preserved
 
 ### Styling
