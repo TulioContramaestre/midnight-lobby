@@ -139,12 +139,32 @@ button:not(#_):not(._):active {
   border: 0;
 }
 
+@font-face {
+  font-family: "ti-metrics";
+  src: local("Arial"), local("Helvetica"), local("Segoe UI"), local("DejaVu Sans"), local("Liberation Sans"), local("Roboto");
+  ascent-override: 90%;
+  descent-override: 10%;
+  line-gap-override: 0%;
+}
+
+/* Icon wrappers take the line metrics of the reference's tabler-icons webfont (ascent 0.9em, descent 0.1em). */
 .ti {
+  font-family: "ti-metrics";
   font-style: normal;
   line-height: 1;
+  position: relative;
+}
+
+.ti::before {
+  content: "";
+  display: inline-block;
+  width: 1em;
 }
 
 .ti > svg {
+  position: absolute;
+  left: 0;
+  top: 0;
   width: 1em;
   height: 1em;
 }

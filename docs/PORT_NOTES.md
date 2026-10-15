@@ -206,7 +206,13 @@ Day numbers in this table are 1-based (Monday = day 1). In code, `day` is 0-base
 ### UI
 
 - The range sliders keep the reference's split. The readout updates while dragging (local component state), and the value commits to game state on the native `change` event, attached through a ref callback.
-- Icons use `@tabler/icons-react` inside an `<i class="ti">` wrapper that keeps the reference's inline styles and aria attributes.
+- **Icons use `@tabler/icons-react`** inside an `<i class="ti">` wrapper that keeps the reference's inline styles and aria attributes.
+  - The wrapper's font is a local system font with `ascent-override: 90%` / `descent-override: 10%`, the same vertical metrics as the tabler-icons webfont. A 1em-wide `::before` gives it the glyph's width, and the SVG is absolutely positioned inside.
+  - As a result, every line box rounds exactly as it did with the webfont. Measured in Chromium, every element's box matches the reference across all three scripted playthroughs.
+  - Browsers without `ascent-override` (older Safari) fall back to the system font's metrics, so icon rows can be up to a pixel taller there.
+- **Text runs are built as single strings** wherever the reference had one text node. For example, `Day 1 of 7 · Monday evening` is one string, not several JSX fragments. Chromium shapes each text node separately, so splitting a run shifts later glyphs by subpixels.
+- **Focus.** The reference rebuilt `#app` with `innerHTML` on every update, so the focused element was always destroyed. React keeps elements, so focus stays where the player put it.
+  - This is visible in one place: after picking a vibe, ethnicity or hair style, the select keeps its focus ring until you click elsewhere. In the reference, the ring disappears immediately.
 
 ### Accessibility
 
