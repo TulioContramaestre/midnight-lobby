@@ -22,3 +22,7 @@ export const RIVAL_ENDING_MIN = 3
 
 export const SUPPORTING_START_AFFECTION = 0
 export const RIVAL_START_AFFECTION = 2
+
+export const EVENING_RIVAL_DELTA = -1
+export const LIKE_GAIN = 1
+export const LIKE_OTHERS_DELTA = -1

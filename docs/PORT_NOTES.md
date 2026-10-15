@@ -55,7 +55,7 @@ The source of truth is `reference/midnight_lobby_dating_sim_v4.html` (gitignored
 | `what` | `describeOffenses()` in `src/engine/confrontation.ts` |
 | `S`, `reset` | `GameState` in `src/engine/types.ts`, `createInitialState(seed)` in `src/engine/initialState.ts`, the `reset` action |
 | `uid` | React `useId()` in `ui/art/Portrait.tsx` and `ui/art/Avatar.tsx` |
-| `nm` | `name()` in `src/engine/selectors.ts` |
+| `nm` | `characterName()` in `src/engine/names.ts` (exposed as `selectors.name`) |
 | `esc` | Not needed (React escapes text) |
 | `tier`, `mood`, `apply` | `sceneTier()`, `mood()`, `applyDeltas()` in `src/engine/affection.ts` |
 | `startH` | `startingAffection()` in `src/engine/creation.ts` |
@@ -179,6 +179,7 @@ Day numbers in this table are 1-based (Monday = day 1). In code, `day` is 0-base
 ### Engine and state
 
 - **Content is passed into the engine.** The engine never imports `src/content` at runtime. `createReducer(content)` and `createSelectors(content)` receive the registry, and `GameProvider` passes the real one. This keeps the engine testable against small fixtures and avoids import cycles.
+- **ESLint enforces the layer boundaries.** `src/engine` may not import React, `src/ui` or `src/app`, and may import `src/content` only with `import type`. `src/content` may not import React or UI code.
 - **Each reducer case works on a copy.** It `structuredClone`s the state and then mutates the copy. That keeps the code close to the reference for review while staying pure (safe under StrictMode's double-invoked reducers).
 - **Randomness is mulberry32 with its state in `GameState.rng`.** Every `Math.random` / `pick` / `rnd` call from the reference draws from it, in the same order. That includes the activity `narr()` functions, which keep their exact expression structure.
   - The initial seed comes from `Date.now()` in `main.tsx`. "Play again" passes a fresh `Date.now()` from the click handler.
