@@ -2,10 +2,10 @@ import { evaluate } from '@/engine/conditions'
 import { DAY_COUNT, SCENE_TIER_HIGH_MIN, SCENE_TIER_MID_MIN, SLOTS_PER_DAY } from '@/engine/constants'
 import { createInitialState } from '@/engine/initialState'
 import { candidateScenes } from '@/engine/scheduler'
-import type { Choice, Condition, ContentRegistry, Line, Tier } from './types'
+import type { GameState } from '@/engine/types'
+import type { CharacterId, Choice, Condition, ContentRegistry, FlagValue, Line, Tier } from './types'
 
 const TIERS: Tier[] = ['low', 'mid', 'high']
-const TIER_VALUES: Record<Tier, number> = { low: 0, mid: SCENE_TIER_MID_MIN, high: SCENE_TIER_HIGH_MIN }
 const ENDING_TIERS = ['good', 'friends', 'left'] as const
 
 export function validate(content: ContentRegistry): string[] {
@@ -30,7 +30,6 @@ export function validate(content: ContentRegistry): string[] {
       if (l.speaker !== null) known(l.speaker, `${where}, line ${i + 1}`)
     })
   }
-  const flags = new Set<string>()
   const checkCondition = (c: Condition | undefined, where: string): void => {
     if (!c) return
     if ('all' in c) c.all.forEach((x) => checkCondition(x, where))
@@ -38,7 +37,6 @@ export function validate(content: ContentRegistry): string[] {
     else if ('not' in c) checkCondition(c.not, where)
     else if ('affection' in c) known(c.affection.who, where)
     else if ('tier' in c) known(c.tier.who, where)
-    else if ('flag' in c) flags.add(c.flag)
   }
   const checkChoice = (choice: Choice, where: string) => {
     const pick = choice.effects.filter((e) => e.type === 'pickDate')
@@ -141,31 +139,73 @@ export function validate(content: ContentRegistry): string[] {
     })
   }
 
-  const flagList = [...flags]
   const base = createInitialState(content, 0)
-  const combos = content.loveInterests.reduce<Record<string, Tier>[]>(
-    (acc, li) => acc.flatMap((c) => TIERS.map((t) => ({ ...c, [li.id]: t }))),
-    [{}],
-  )
   for (let day = 0; day < DAY_COUNT; day++) {
     for (let slot = 0; slot < SLOTS_PER_DAY; slot++) {
-      for (const tiers of combos) {
-        for (let mask = 0; mask < 1 << flagList.length; mask++) {
-          const affection = Object.fromEntries(Object.entries(tiers).map(([id, t]) => [id, TIER_VALUES[t]]))
-          const flagState = Object.fromEntries(flagList.map((f, i) => [f, Boolean(mask & (1 << i))]))
-          const s = { ...base, day, slot, affection, flags: flagState }
-          const where = `Day ${day} slot ${slot}`
-          const [first, second] = candidateScenes(content, s, day, slot)
-          if (!first) fail(`${where}: no scene for some tier/flag combination`)
-          else if (second && (second.priority ?? 0) === (first.priority ?? 0)) {
-            fail(`${where}: "${first.id}" and "${second.id}" both apply with the same priority`)
-          } else if (!first.variants.some((v) => evaluate(v.when, s))) {
-            fail(`${where}: no variant of "${first.id}" matches some tier/flag combination`)
-          }
-        }
-      }
+      const error = checkSlot(content, base, day, slot)
+      if (error) fail(`Day ${day} slot ${slot}: ${error}`)
     }
   }
 
   return errors
+}
+
+function checkSlot(content: ContentRegistry, base: GameState, day: number, slot: number): string | null {
+  const scenes = content.scenes.filter((sc) => sc.day === day && sc.slot === slot)
+  const { affection, flags } = probeValues(scenes.flatMap((sc) => [sc.when, ...sc.variants.map((v) => v.when)]))
+  for (const a of product(affection)) {
+    for (const f of product(flags)) {
+      const s = { ...base, day, slot, affection: a, flags: f }
+      const when = describeCase(a, f)
+      const [first, second] = candidateScenes(content, s, day, slot)
+      if (!first) return `no scene${when}`
+      if (second && (second.priority ?? 0) === (first.priority ?? 0)) {
+        return `"${first.id}" and "${second.id}" both apply with the same priority${when}`
+      }
+      if (!first.variants.some((v) => evaluate(v.when, s))) return `no variant of "${first.id}" matches${when}`
+    }
+  }
+  return null
+}
+
+function probeValues(conditions: (Condition | undefined)[]) {
+  const affection = new Map<CharacterId, Set<number>>()
+  const flags = new Map<string, Set<FlagValue>>()
+  const around = (who: CharacterId, ...thresholds: number[]) => {
+    const values = affection.get(who) ?? new Set([0])
+    for (const n of thresholds) values.add(n - 1).add(n)
+    affection.set(who, values)
+  }
+  const walk = (c: Condition | undefined): void => {
+    if (!c) return
+    if ('all' in c) c.all.forEach(walk)
+    else if ('any' in c) c.any.forEach(walk)
+    else if ('not' in c) walk(c.not)
+    else if ('affection' in c) {
+      const { who, gte, lte } = c.affection
+      around(who, ...(gte === undefined ? [] : [gte]), ...(lte === undefined ? [] : [lte + 1]))
+    } else if ('tier' in c) around(c.tier.who, SCENE_TIER_MID_MIN, SCENE_TIER_HIGH_MIN)
+    else if ('flag' in c) {
+      const values = flags.get(c.flag) ?? new Set<FlagValue>([false, true])
+      if (c.is !== undefined) values.add(c.is)
+      flags.set(c.flag, values)
+    }
+  }
+  conditions.forEach(walk)
+  return { affection, flags }
+}
+
+function product<T>(axes: Map<string, Set<T>>): Record<string, T>[] {
+  return [...axes].reduce<Record<string, T>[]>(
+    (acc, [key, values]) => acc.flatMap((combo) => [...values].map((v) => ({ ...combo, [key]: v }))),
+    [{}],
+  )
+}
+
+function describeCase(affection: Record<string, number>, flags: Record<string, FlagValue>): string {
+  const parts = [
+    ...Object.entries(affection).map(([id, v]) => `${id} at ${v}`),
+    ...Object.entries(flags).map(([flag, v]) => `${flag} = ${v}`),
+  ]
+  return parts.length ? ' when ' + parts.join(', ') : ''
 }

@@ -1,4 +1,4 @@
-import type { CharacterId, Choice, Deltas, Line, LineText, Scene, SceneVariant, Tier } from './types'
+import type { CharacterId, Choice, Condition, Deltas, Line, LineText, Scene, SceneVariant, Tier } from './types'
 
 export const say = (speaker: CharacterId, text: LineText): Line => ({ speaker, text })
 
@@ -28,6 +28,8 @@ export function scene(scene: {
   day: number
   slot: number
   cast: CharacterId[]
+  when?: Condition
+  priority?: number
   lines: Line[]
   choices: Choice[]
 }): Scene {
