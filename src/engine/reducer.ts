@@ -36,6 +36,10 @@ export function createReducer(content: ContentRegistry): Reducer {
         s.phase = 'create'
         return s
 
+      case 'goToIntro':
+        s.phase = 'intro'
+        return s
+
       case 'setName':
         s.player.name = action.name
         if (s.createError) s.createError = ''

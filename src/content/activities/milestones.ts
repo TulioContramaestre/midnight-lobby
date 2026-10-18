@@ -9,7 +9,7 @@ export const milestones: Milestones = {
     lockedLabel: 'Match profile pictures with {n} · get closer to unlock',
     switchPenalty: -3,
     switchedNarration: '{prev} noticed you switched to matching pfps with {name}. She changed hers back within the minute.',
-    matchedNarration: 'Your profile picture now matches hers. Check the People tab.',
+    matchedNarration: 'Your profile picture now matches hers.',
   },
   sleep: {
     label: 'Ask {n} for a sleep call',

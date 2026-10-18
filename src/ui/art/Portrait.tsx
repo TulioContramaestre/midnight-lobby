@@ -77,7 +77,7 @@ function detail(spec: PortraitSpec, d: PortraitDetail): ReactNode {
   }
 }
 
-export function Portrait({ id, mood, size }: { id: CharacterId; mood: Mood; size: number }) {
+export function Portrait({ id, mood }: { id: CharacterId; mood: Mood }) {
   const { selectors } = useGame()
   const clip = 'cp' + useId().replace(/[^A-Za-z0-9_-]/g, '')
   const li = selectors.content.loveInterest(id)
@@ -86,7 +86,7 @@ export function Portrait({ id, mood, size }: { id: CharacterId; mood: Mood; size
   const P = spec.palette
   const L = spec.hairLength
   return (
-    <svg width={size} height={size} viewBox="0 0 200 200" role="img" aria-label={`Portrait of ${li.name}, ${mood}`}>
+    <svg width="100%" height="100%" preserveAspectRatio="xMidYMid slice" viewBox="0 0 200 200" role="img" aria-label={`Portrait of ${li.name}, ${mood}`}>
       <defs>
         <clipPath id={clip}>
           <circle cx="100" cy="100" r="98" />

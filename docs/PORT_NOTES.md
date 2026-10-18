@@ -8,6 +8,8 @@ The source of truth is `reference/midnight_lobby_dating_sim_v4.html` (gitignored
 - the decisions made during the port,
 - how the port was verified and what still looks different.
 
+The UI has since been replaced by the v2 "desktop + browser" reskin (see [v2 reskin](#v2-reskin-desktop--browser)). The engine and content are unchanged apart from the changes listed there. Quirks and decisions below that are about the original UI (the host button rule, delta chips, the People tab, the sliders, the visual comparison) describe the port before the reskin.
+
 ## Inventory
 
 ### Data tables
@@ -63,7 +65,7 @@ The source of truth is `reference/midnight_lobby_dating_sim_v4.html` (gitignored
 | `addPosts`, `like` | `addPostsForDay()`, `like()` in `src/engine/feed.ts` |
 | `loadScene` | `src/engine/scheduler.ts` (`pickScene`), called by the reducer |
 | `react` | `resolveReaction()` in `src/engine/reactions.ts` |
-| `chips` | `deltaChips()` selector; rendered by `ui/components/DeltaChips.tsx` |
+| `chips` | `deltaChips()` selector (not rendered since the v2 reskin, which hides affection) |
 | `score` | `src/engine/scoring.ts`, driven by the rules in `src/content/scoring.ts` |
 | `doEv` | `src/engine/evening.ts` |
 | `begin`, `choose`, `cont`, `nextDay`, `confChoose`, `setView`, `setP`, `nameIn`, `fdGo` | Reducer actions in `src/engine/reducer.ts` |
@@ -75,17 +77,15 @@ The source of truth is `reference/midnight_lobby_dating_sim_v4.html` (gitignored
 | `portrait()` drawing | `src/ui/art/Portrait.tsx` |
 | `avatar()` | `src/ui/art/Avatar.tsx` |
 | `pav()` | `src/ui/art/PlayerAvatar.tsx` |
-| `pic()` | `src/ui/art/CharacterPicture.tsx` |
-| `hc()` | `src/ui/components/signColor.ts` |
-| `header()` | `src/ui/layout/Header.tsx` |
-| `lineHTML()` | `src/ui/components/DialogueLine.tsx` |
-| `portraitsRow()` | `src/ui/components/PortraitRow.tsx` |
-| `sw()` | `src/ui/components/Swatch.tsx` |
-| `intro()`, `create()`, `sceneView()`, `evening()`, `confrontView()`, `ending()` | `src/ui/screens/*Screen.tsx` |
-| `feed()`, `people()` | `src/ui/panels/FeedPanel.tsx`, `src/ui/panels/PeoplePanel.tsx` |
+| `pic()` | `src/ui/art/CharacterPicture.tsx`, wrapped for circles by `src/ui/art/Pic.tsx` |
+| `intro()`, `create()` | `src/ui/desktop/` (`Desktop`, `IntroStep`, `ProfileStep`) |
+| `header()` | `src/ui/browser/Browser.tsx` (tab strip and address bar) |
+| `sceneView()`, `evening()`, `confrontView()` | `src/ui/lobby/` (chat log and composer states), with the message log kept in `src/app/session/` |
+| `feed()` | `src/ui/chirp/Chirp.tsx` |
+| `people()` | `src/ui/lobby/ProfilePopout.tsx` |
+| `ending()` | `src/ui/recap/WeekRecap.tsx` |
 | `render()` | `src/app/App.tsx` |
-| `.ed` CSS | `src/styles/game.css` |
-| Host token, reset and control CSS | `src/styles/tokens.css`, `src/styles/base.css` |
+| All CSS | `src/styles/app.css` |
 
 ### State names
 
@@ -247,3 +247,54 @@ Results:
   - The gamertag box still shows its focus ring in the port, because the harness sets sliders and selects by script without moving focus. By then the reference had rebuilt the page and dropped focus.
   - In real use the player clicks the next control, so what they see is the select behaviour described under Decisions → UI → Focus.
 - **Not compared.** Firefox and Safari. Older Safari ignores `ascent-override`, so icon rows may be up to a pixel taller there (see Decisions → UI).
+
+## v2 reskin (desktop + browser)
+
+The source is `design_handoff_midnight_lobby_v2/`. `Midnight Lobby.dc.html` is the visual source of truth, and its `<script data-dc-script>` block is the UI logic. Its `engine.js` is the original game code with four changes, applied here as follows:
+
+1. **`render()` becomes a hook.** Nothing to change: React already re-renders from the reducer.
+2. **Portraits fill their container.** `Portrait` and `Avatar` draw at `width/height 100%` with `preserveAspectRatio="xMidYMid slice"`, and the `size` prop is gone.
+3. **pfp copy.** `milestones.pfp.matchedNarration` drops "Check the People tab."
+4. **Intro copy.** "only whether a choice landed or backfired" now reads "only how they react". This text lives in `IntroStep.tsx`.
+
+One engine action was added: `goToIntro`, for the profile step's "← Back". It mirrors `goToCreate`.
+
+### Session layer
+
+The design's component state (current location, per-location message logs, day dividers, DM ordering, typing, the summary and profile popout, the start-of-day snapshot) is `Session` in `src/app/session/types.ts`. `createSessionReducer` wraps the game reducer. Each action ports one of the design's methods (`launch`, `pick`, `advance`, `askPick`, `confPick`, `evDo`, …): it runs the game reducer, then reads the new state and posts lines to the log, as the design does after calling `choose()`/`doEv()`.
+
+- **Scene locations.** Scenes map to channels and DMs by title, through `LOC` in `src/app/session/locations.ts`, copied from the handoff's table.
+- **When text is fixed.** Chat text is resolved when it's posted. Dynamic lines are no longer re-evaluated on every render.
+- **Moods.** A message keeps the mood its speaker had when it was posted (`moodOverrides` first, as with `S.tm`).
+- **Timers.** `pick()` in `GameProvider` dispatches the reply, then `showTyping` at 700 ms and `advance` at 2,000 ms. The timers live at the root so switching to Chirp doesn't cancel them. The reducer ignores a stale `advance`.
+- **Keys.** 1–3 are handled by a window listener in `Lobby.tsx`.
+- **Browser tab.** The tab comes from the game's `view`: `'feed'` is Chirp and anything else is Midnight Lobby. `setView('feed')` already does what the design's `openChirp` does.
+
+### Styling
+
+- Inline styles are copied from the design element by element.
+- The design runtime turns `style-hover` into a class with `:hover{… !important}`. `app.css` does the same with one `hv-*` class per hover style.
+- Figtree loads from Google Fonts in `index.html`, as in the design.
+- Icons are still `@tabler/icons-react` inside the `.ti` metric wrapper.
+
+### Deliberate differences from the prototype
+
+- No "Skip to Sunday night (prototype)" link, and no `support.js`.
+- "Send to X" and "Start Wednesday" use a single space. The design runtime renders each `{{ }}` value as its own flex item, which adds the flex gap after "Send to" and "Start". These are the only two places in the design where that happens.
+
+### What changed compared with the original port's UI
+
+- No affection chips. The reaction portrait is the only signal during the week.
+- The People screen became the profile popout.
+- The ending tag pluralises ("1 heart").
+- The creation sliders update on every input.
+
+### Verification
+
+Run in headless Chromium at 1280×800 and 1100×720:
+
+- **Setup.** The prototype and the production build were driven in lockstep through four scripted weeks: Nyx, Goldie, Rhea, and a Nyx-chasing week that ends in Rhea's confrontation. Both used the same seed. On the prototype page, `engine.js` drew from its own seeded stream, because the page's other scripts also call `Math.random`.
+- **Coverage.** Each week covered every scene, evenings, sub-lists, Chirp likes, the summary, the ask-out, the confrontation, the recap and "Play again".
+- **Result.** Every screenshot pair matches apart from icon antialiasing (SVG vs webfont, at most about 1,300 pixels). The exception is the end-of-day summary, which also differs by the removed skip link (up to about 1,700 pixels).
+- **Hover.** Hover states matched as well.
+

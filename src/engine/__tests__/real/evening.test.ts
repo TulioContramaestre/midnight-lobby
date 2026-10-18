@@ -33,7 +33,7 @@ describe('evening with real content', () => {
     expect(out.evening.result?.deltas).toEqual({ goldie: 2, nyx: -3, dex: -1 })
     expect(out.evening.result?.lines.slice(1)).toEqual([
       { speaker: null, text: 'Nyx noticed you switched to matching pfps with Goldie. She changed hers back within the minute.' },
-      { speaker: null, text: 'Your profile picture now matches hers. Check the People tab.' },
+      { speaker: null, text: 'Your profile picture now matches hers.' },
     ])
     expect(selectors.playerAvatar(out).spec).toMatchObject({ bg: '#FAC775', ears: 'dog', earColor: '#854F0B', earInner: '#854F0B' })
   })

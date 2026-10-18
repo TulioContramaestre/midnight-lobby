@@ -1,6 +1,13 @@
 # Adding content
 
-Everything the player reads lives in `src/content`. The engine (`src/engine`) and the UI (`src/ui`) never name a specific character, scene or game. They read everything through the registry. Adding a character, a scene or an evening activity therefore means adding or editing files under `src/content`. The one exception is a CSS colour token for a new love interest's name colour.
+Everything the player reads lives in `src/content`. The engine (`src/engine`) never names a specific character, scene or game. It reads everything through the registry. Adding a character, a scene or an evening activity therefore mostly means adding or editing files under `src/content`.
+
+The desktop + browser UI has two exceptions, both from the design:
+
+- **Where a scene happens.** `src/app/session/locations.ts` maps every scene title to a channel (`ch:general`) or a DM (`dm:goldie`, `dm:group`). Sunday's ask-out maps to `pick`, which opens the ask-out modal.
+- **Per-character styling.** `src/ui/theme.ts` holds each character's name colour (`NAMECOL`) and profile banner (`BANNER`), plus each love interest's status dot and line (`STATUS`).
+
+`src/app/session/__tests__/locations.test.ts` fails if a scene or love interest is missing from these tables.
 
 This guide covers the basics, then three worked examples:
 
@@ -23,6 +30,8 @@ This guide covers the basics, then three worked examples:
 | Character creation | `creation/` |
 | End-of-week scoring | `scoring.ts` |
 | Chirp like notes | `feedNotes.ts` |
+| Which channel or DM a scene happens in | `src/app/session/locations.ts` (outside `src/content`) |
+| Name colours, banners and statuses | `src/ui/theme.ts` (outside `src/content`) |
 
 `registry.ts` collects all of it. The lists in `characters/index.ts`, `scenes/index.ts` and `activities/index.ts` decide what is included and in what order. The type definitions, with every field, are in `src/content/types.ts`.
 
@@ -46,7 +55,7 @@ This guide covers the basics, then three worked examples:
 | `scene({...})` | A scene with one version. Optional `when` and `priority` make it replace a slot's usual scene only in some playthroughs. |
 | `tiered({...})` | A one-girl scene with `low`, `mid` and `high` versions, picked by her affection when the scene loads |
 
-`text` can be a plain string or a function of the game state, for example `(ctx) => ctx.slept.length >= 2 ? '…' : '…'`. Function lines are re-evaluated every time the screen renders.
+`text` can be a plain string or a function of the game state, for example `(ctx) => ctx.slept.length >= 2 ? '…' : '…'`. Function lines are evaluated when the line is posted to the chat, and the posted text doesn't change after that.
 
 ### How a slot picks its scene
 
@@ -220,7 +229,13 @@ it('swaps in the rematch only after beating Kai', () => {
 
 The validator checks each slot only against the flags and characters that slot's scenes mention. Adding events or characters elsewhere in the week therefore doesn't slow it down. Within a single slot, each extra flag doubles the work, which only matters if one slot depends on many flags at once.
 
-**Tests to update:** `parity.test.ts` › "scenes, variants and choices", which counts the scenes.
+Finally, say where the scene happens. Kai reposts in #general, so add it to `LOC` in `src/app/session/locations.ts`:
+
+```ts
+"Kai's rematch": 'ch:general',
+```
+
+**Tests to update:** `parity.test.ts` › "scenes, variants and choices", which counts the scenes. `locations.test.ts` fails until the `LOC` entry exists.
 
 ## Example 3: a fourth love interest
 
@@ -344,16 +359,17 @@ The validator doesn't require this, but without it nobody can pick her at the en
 pickDate('juno', 'Message Juno: “dinner. 8pm. you pick the place, i pick the route.”'),
 ```
 
-### 6. Give her a name colour
+### 6. Give her a name colour, banner and status
 
-Her dialogue name uses `var(--text-tint-<tint>)`. For `tint: 'teal'`, add the token to `src/styles/tokens.css` in both the light block and the dark block:
+In `src/ui/theme.ts`, add her to `NAMECOL` (her name in chat, lists and the recap), `BANNER` (her profile banner, intro card and recap header) and `STATUS` (the dot colour and status line in the member list and DM list). Wren and Cole can have a `BANNER` entry too, for their DM profile panels. Without one, they get a neutral grey banner.
 
-```css
---text-tint-teal: #0f6e56; /* light */
---text-tint-teal: #5dcaa5; /* dark */
+```ts
+juno: 'oklch(0.78 0.11 185)', // NAMECOL
+juno: 'oklch(0.45 0.09 185)', // BANNER
+juno: ['oklch(0.72 0.17 150)', 'Online'], // STATUS
 ```
 
-Without the token, `tintFallback.text` from her profile is used in both themes.
+`locations.test.ts` › "per-character theme" fails until all three exist. The profile's `tint` and `tintFallback` fields are no longer used by the UI.
 
 ### What you get without extra work
 
@@ -362,11 +378,12 @@ Without the token, `tintFallback.text` from her profile is used in both themes.
 - **Confrontation.** If you ask her out after a sleep call or matching pfps with someone else, she confronts you with the lines in her `confrontation.ts`.
 - **Scoring.** The end-of-week score uses Wren and Cole through the `bestFriend` and `rival` rules in `scoring.ts`.
 - **Ending.** She gets a "Meanwhile" epilogue when you pick someone else, and Cole gets his rival ending.
-- **People tab.** Wren and Cole appear there.
+- **Lobby and Chirp lists.** She appears in the intro, the member list, the evening pills, Chirp's "Who to watch" and the ask-out modal. Wren and Cole appear in the member list, and Cole in Chirp's "Competition" card.
 
 Some things are still up to you:
 
 - **Story scenes.** Existing scenes don't mention her. To give her scenes, either rewrite existing ones or add scenes that replace a slot under a condition, as in Example 2. Every day has exactly three slots.
+- **Group DM.** The group chat is named "nyx, goldie, rhea" (`person()` in `src/ui/theme.ts`). Rename it if she should be in it.
 - **First impressions.** The starting-affection effects in `creation/age.ts`, `creation/height.ts` and `creation/vibes.ts` don't include her, so she starts at 0 unless you add her there.
 - **The like note's wording.** It names the other girls joined with " and ", as the original game did: "Liked. Nyx ↑ · Goldie and Rhea and Juno noticed ↓". To change that, edit the note text in `feedNotes.ts` and the engine code that fills in `{others}`.
 

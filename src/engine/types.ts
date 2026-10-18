@@ -78,6 +78,7 @@ export type EveningAction = { kind: 'activity'; id: string } | { kind: 'mileston
 export type Action =
   | { type: 'reset'; seed: number }
   | { type: 'goToCreate' }
+  | { type: 'goToIntro' }
   | { type: 'setName'; name: string }
   | { [K in keyof EditablePlayer]: { type: 'setPlayerField'; field: K; value: EditablePlayer[K] } }[keyof EditablePlayer]
   | { type: 'begin' }

@@ -1,0 +1,137 @@
+body {
+  margin: 0;
+  background: oklch(0.14 0.008 270);
+  font-family: Figtree, system-ui, sans-serif;
+}
+
+a {
+  color: oklch(0.8 0.1 230);
+}
+
+a:hover {
+  color: oklch(0.88 0.08 230);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+@keyframes mlpulse {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1.35);
+    opacity: 0;
+  }
+}
+
+input[type="range"] {
+  accent-color: oklch(0.68 0.16 350);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@font-face {
+  font-family: "ti-metrics";
+  src: local("Arial"), local("Helvetica"), local("Segoe UI"), local("DejaVu Sans"), local("Liberation Sans"), local("Roboto");
+  ascent-override: 90%;
+  descent-override: 10%;
+  line-gap-override: 0%;
+}
+
+/* Icon wrappers take the line metrics of the tabler-icons webfont (ascent 0.9em, descent 0.1em). */
+.ti {
+  font-family: "ti-metrics";
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  position: relative;
+}
+
+.ti::before {
+  content: "";
+  display: inline-block;
+  width: 1em;
+}
+
+.ti > svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1em;
+  height: 1em;
+}
+
+/* Hover states. Like the design runtime, these use !important so they beat the inline base styles. */
+.hv-pink:hover {
+  background: oklch(0.74 0.15 350) !important;
+}
+
+.hv-bright:hover {
+  color: oklch(0.95 0 0) !important;
+}
+
+.hv-prism:hover {
+  background: oklch(0.3 0.01 270 / 0.7) !important;
+}
+
+.hv-tab:hover {
+  background: oklch(0.21 0.01 270) !important;
+}
+
+.hv-channel:hover {
+  background: oklch(0.27 0.01 270) !important;
+  color: oklch(0.9 0 0) !important;
+}
+
+.hv-item:hover {
+  background: oklch(0.27 0.01 270) !important;
+}
+
+.hv-userbar:hover {
+  background: oklch(0.23 0.01 270) !important;
+}
+
+.hv-reply:hover {
+  background: oklch(0.33 0.02 350) !important;
+  box-shadow: inset 0 0 0 1px oklch(0.68 0.16 350) !important;
+}
+
+.hv-reply-blue:hover {
+  background: oklch(0.27 0.03 230) !important;
+  box-shadow: inset 0 0 0 1px oklch(0.8 0.1 230) !important;
+}
+
+.hv-ping:hover {
+  background: oklch(0.3 0.04 350) !important;
+}
+
+.hv-pill:hover {
+  background: oklch(0.17 0.01 270) !important;
+}
+
+.hv-chirp:hover {
+  background: oklch(0.29 0.01 270) !important;
+}
+
+.hv-like:hover {
+  color: oklch(0.78 0.16 10) !important;
+  background: oklch(0.3 0.06 10) !important;
+}
+
+.hv-ask:hover {
+  box-shadow: inset 0 0 0 2px oklch(0.68 0.16 350) !important;
+  background: oklch(0.23 0.015 350) !important;
+}

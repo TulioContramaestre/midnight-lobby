@@ -4,13 +4,13 @@ import type { AvatarSpec } from '@/content/types'
 
 const INK = '#2C2C2A'
 
-export function Avatar({ spec: o, size, label }: { spec: AvatarSpec; size: number; label: string }) {
+export function Avatar({ spec: o, label }: { spec: AvatarSpec; label: string }) {
   const { selectors } = useGame()
   const clip = 'cp' + useId().replace(/[^A-Za-z0-9_-]/g, '')
   const earColor = o.earColor ?? ''
   const earInner = o.earInner ?? ''
   return (
-    <svg width={size} height={size} viewBox="0 0 200 200" role="img" aria-label={label}>
+    <svg width="100%" height="100%" preserveAspectRatio="xMidYMid slice" viewBox="0 0 200 200" role="img" aria-label={label}>
       <defs>
         <clipPath id={clip}>
           <circle cx="100" cy="100" r="98" />
