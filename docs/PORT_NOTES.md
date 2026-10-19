@@ -250,7 +250,7 @@ Results:
 
 ## v2 reskin (desktop + browser)
 
-The source is `design_handoff_midnight_lobby_v2/`. `Midnight Lobby.dc.html` is the visual source of truth, and its `<script data-dc-script>` block is the UI logic. Its `engine.js` is the original game code with four changes, applied here as follows:
+The source is `design_handoff_midnight_lobby_v2/` (deleted after the reskin). `Midnight Lobby.dc.html` is the visual source of truth, and its `<script data-dc-script>` block is the UI logic. Its `engine.js` is the original game code with four changes, applied here as follows:
 
 1. **`render()` becomes a hook.** Nothing to change: React already re-renders from the reducer.
 2. **Portraits fill their container.** `Portrait` and `Avatar` draw at `width/height 100%` with `preserveAspectRatio="xMidYMid slice"`, and the `size` prop is gone.
