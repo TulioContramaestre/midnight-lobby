@@ -9,7 +9,7 @@ export const monday: Scene[] = [
     slot: 0,
     cast: ['nyx'],
     lines: [
-      narrate('You join the Midnight Lobby Discord server for the first time. One voice channel is active.'),
+      narrate('You join the Midnight Lobby server for the first time. One voice channel is active.'),
       say('nyx', 'oh. new guy. ...hi i guess.'),
     ],
     choices: [
