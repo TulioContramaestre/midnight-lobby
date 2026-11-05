@@ -79,3 +79,15 @@ Why the project is built the way it is. Add a new entry when a significant choic
 **Decision:** `docs/STYLE.md` defines each character's voice, the narrator, the choice archetypes and the balance scale. Existing content is the source of truth; the guide follows it.
 
 **Why:** Keeps new content consistent across many sessions and contributors. The content validator turns the mechanical voice rules into warnings.
+
+## 11. Mobile layout through CSS and drawers
+
+**Decision:** Below 1100px the game switches to a mobile layout using one CSS breakpoint. `m-*` classes in `src/styles/app.css` override the inline styles with `!important`, the same way the `hv-*` hover classes do. The chat column fills the screen, and the side panels become drawers tracked by `panel` in the session state.
+
+**Why:** The chat column can already drive the whole game, because ping cards and the evening pills handle all required navigation. So the layout can change without touching the engine, the content or the desktop UI. CSS also means no `matchMedia` or resize listeners. The breakpoint matches the old 1100px minimum width, so no size is left with sideways scrolling.
+
+**Alternatives considered:**
+- **A separate mobile component tree:** cleaner per screen, but it duplicates every screen and the two would drift apart.
+- **Moving inline styles into CSS files:** the proper long-term fix for the `!important` overrides, but a large rewrite with a high risk of changing the desktop look.
+
+**Revisit if:** the mobile rules grow enough that the overrides become hard to follow.

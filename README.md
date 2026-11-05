@@ -16,7 +16,7 @@ The joke is that it takes internet romance completely seriously. Matching profil
 >
 > "Insecurity isn't cute. It's lag." — Rhea
 
-The whole game is presented as a fake desktop: a chat client, a browser and a social feed, with all the art drawn in code as SVG.
+The whole game is presented as a fake desktop: a chat client, a browser and a social feed, with all the art drawn in code as SVG. On a phone, it collapses into a single chat screen with slide-out panels.
 
 ![The Chirp feed](docs/images/chirp.png)
 

@@ -29,3 +29,4 @@ Ideas and next steps that came up while planning the port. Not commitments. Move
 - v2 desktop + browser reskin (2026-10-18).
 - Deleted `reference/`.
 - Removed `PORT_PROMPT.md` (2026-11-04).
+- Mobile layout and link preview tags (2026-11-04).

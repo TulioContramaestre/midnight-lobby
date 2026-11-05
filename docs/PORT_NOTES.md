@@ -282,6 +282,10 @@ The design's component state (current location, per-location message logs, day d
 - No "Skip to Sunday night (prototype)" link, and no `support.js`.
 - "Send to X" and "Start Wednesday" use a single space. The design runtime renders each `{{ }}` value as its own flex item, which adds the flex gap after "Send to" and "Start". These are the only two places in the design where that happens.
 
+### Mobile layout
+
+Added after the reskin (2026-11-04), so it isn't part of the prototype. Below 1100px, `m-*` classes in `src/styles/app.css` turn the Lobby into a single chat column, with `ServerRail` + `Sidebar` and `MemberPanel` as drawers (`panel` in the session state). The fake window controls, taskbar clock, Chirp side columns and "Message @x" bar are hidden, and "PRESS 1–3" is hidden because there are no number keys. At 1100px and wider the layout is unchanged. See `DECISIONS.md` #11.
+
 ### What changed compared with the original port's UI
 
 - No affection chips. The reaction portrait is the only signal during the week.
