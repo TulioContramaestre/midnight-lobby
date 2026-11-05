@@ -6,13 +6,14 @@ Ideas and next steps that came up while planning the port. Not commitments. Move
 
 - [ ] **Voice checks in the content validator.** Implement `docs/STYLE.md` section 9 as warnings, with an allowlist for existing lines that break pattern on purpose.
 - [ ] **Decide on preserved quirks.** Go through `docs/PORT_NOTES.md` and decide, item by item, whether each quirk is intended. Fixing any of them is a balance change: update tests and note it in `DECISIONS.md`.
-- [ ] **Move or remove `PORT_PROMPT.md`.** Remove it from the repo root or move it to `docs/` as a record.
 
 ## Soon
 
 - [ ] **Save and load.** Store `GameState` (including the RNG state) in `localStorage`, wrapped in try/catch. Autosave after each action; a "Continue" option on the intro screen.
 - [ ] **Dev panel.** A toggleable overlay (dev builds only) showing hidden affection for every character, flags, current tier per girl, and the projected ending score. Useful for writing and balancing.
 - [ ] **First choice-triggered storyline.** A scene that only appears if an earlier choice set a flag. Proves out the scheduler and doubles as the worked example in `docs/ADDING_CONTENT.md`.
+- [ ] **Player gender choice.** Let the player pick a gender at character creation, which changes the love interests.
+- [ ] **Bigger side characters.** More interactions with the supporting cast, with more impact on how the story plays out.
 
 ## Later
 
@@ -27,3 +28,4 @@ Ideas and next steps that came up while planning the port. Not commitments. Move
 - Added `CLAUDE.md` and `docs/STYLE.md`.
 - v2 desktop + browser reskin (2026-10-18).
 - Deleted `reference/`.
+- Removed `PORT_PROMPT.md` (2026-11-04).
