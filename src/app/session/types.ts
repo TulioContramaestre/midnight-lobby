@@ -11,6 +11,8 @@ export type LogEntry =
   | { kind: 'msg'; id: CharacterId; mood: Mood; text: string; time: string }
   | { kind: 'sys'; icon: SysIcon; text: string; time: string }
 
+export type Panel = 'nav' | 'members' | null
+
 export interface Session {
   game: GameState
   loc: Loc
@@ -24,6 +26,7 @@ export interface Session {
   typing: boolean
   summary: boolean
   profileOpen: boolean
+  panel: Panel
   daySnap: Record<CharacterId, number>
 }
 
@@ -41,4 +44,5 @@ export type SessionAction =
   | { type: 'endNight' }
   | { type: 'startNextDay' }
   | { type: 'toggleProfile' }
+  | { type: 'setPanel'; panel: Panel }
   | { type: 'playAgain'; seed: number }

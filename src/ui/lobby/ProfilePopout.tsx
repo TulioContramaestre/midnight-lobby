@@ -16,6 +16,7 @@ export function ProfilePopout() {
     <>
       <div onClick={close} style={{ position: 'absolute', inset: 0, zIndex: 4 }} />
       <div
+        className="m-popout"
         style={{
           position: 'absolute',
           left: 80,

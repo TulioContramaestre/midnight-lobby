@@ -177,4 +177,16 @@ describe('session reducer', () => {
     expect(s.game.phase).toBe('intro')
     expect(s.logs).toEqual({})
   })
+
+  it('opens a mobile panel and closes it on navigation', () => {
+    let s = start()
+    expect(s.panel).toBeNull()
+    s = reducer(s, { type: 'setPanel', panel: 'nav' })
+    expect(s.panel).toBe('nav')
+    s = reducer(s, { type: 'setPanel', panel: 'members' })
+    expect(s.panel).toBe('members')
+    s = reducer(s, { type: 'go', loc: 'ch:general' })
+    expect(s.loc).toBe('ch:general')
+    expect(s.panel).toBeNull()
+  })
 })

@@ -26,8 +26,8 @@ export function ProfileStep() {
   const ring = (on: boolean, off: string) => (on ? '0 0 0 3px oklch(0.245 0.01 270), 0 0 0 5px ' + ON : off)
   return (
     <>
-      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) 380px' }}>
-        <div style={{ padding: '26px 28px', display: 'flex', flexDirection: 'column', gap: 20 }}>
+      <div className="m-stack" style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) 380px' }}>
+        <div className="m-pad" style={{ padding: '26px 28px', display: 'flex', flexDirection: 'column', gap: 20 }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
             <span style={{ font: '800 26px Figtree', letterSpacing: '-0.01em' }}>Who's logging on tonight?</span>
             <span style={{ font: '400 15px Figtree', color: 'oklch(0.72 0.01 270)' }}>
@@ -57,7 +57,7 @@ export function ProfileStep() {
               <span style={{ font: '500 13px Figtree', color: 'oklch(0.75 0.15 25)' }}>{state.createError}</span>
             )}
           </div>
-          <div style={PAIR}>
+          <div className="m-stack" style={PAIR}>
             <div style={COL8}>
               <div style={RANGE_HEAD}>
                 <span>AGE</span>
@@ -91,7 +91,7 @@ export function ProfileStep() {
           </div>
           <div style={COL8}>
             <span style={LABEL}>VIBE</span>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,minmax(0,1fr))', gap: 8 }}>
+            <div className="m-half" style={{ display: 'grid', gridTemplateColumns: 'repeat(4,minmax(0,1fr))', gap: 8 }}>
               {c.vibes.map((v) => (
                 <div
                   key={v.id}
@@ -114,7 +114,7 @@ export function ProfileStep() {
               ))}
             </div>
           </div>
-          <div style={PAIR}>
+          <div className="m-stack" style={PAIR}>
             <div style={COL8}>
               <span style={LABEL}>SKIN TONE</span>
               <div style={{ display: 'flex', gap: 8 }}>
@@ -154,10 +154,10 @@ export function ProfileStep() {
               </div>
             </div>
           </div>
-          <div style={PAIR}>
+          <div className="m-stack" style={PAIR}>
             <div style={COL8}>
               <span style={LABEL}>HAIR STYLE</span>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,minmax(0,1fr))', gap: 6 }}>
+              <div className="m-half" style={{ display: 'grid', gridTemplateColumns: 'repeat(4,minmax(0,1fr))', gap: 6 }}>
                 {c.hairStyles.map((h) => (
                   <div
                     key={h.id}
@@ -267,6 +267,7 @@ export function ProfileStep() {
         </div>
       </div>
       <div
+        className="m-foot"
         style={{
           height: 56,
           flex: 'none',
@@ -288,9 +289,11 @@ export function ProfileStep() {
           <Icon name="arrow-left" />
           Back
         </span>
-        <span style={{ width: 1, height: 18, background: 'oklch(0.32 0.01 270)' }} />
-        <Icon name="device-floppy" style={{ fontSize: 18, color: 'oklch(0.72 0.17 150)' }} />
-        Profile saves automatically.
+        <span className="m-hide" style={{ display: 'contents' }}>
+          <span style={{ width: 1, height: 18, background: 'oklch(0.32 0.01 270)' }} />
+          <Icon name="device-floppy" style={{ fontSize: 18, color: 'oklch(0.72 0.17 150)' }} />
+          Profile saves automatically.
+        </span>
         <span style={{ marginLeft: 'auto', display: 'flex', gap: 6, alignItems: 'center', color: 'oklch(0.9 0.01 270)' }}>
           Open Prism from the taskbar to log on
           <Icon name="arrow-down" />

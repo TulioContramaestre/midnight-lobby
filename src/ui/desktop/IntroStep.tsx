@@ -8,14 +8,14 @@ export function IntroStep() {
   const content = selectors.content
   return (
     <>
-      <div style={{ padding: '26px 28px', display: 'flex', flexDirection: 'column', gap: 20 }}>
+      <div className="m-pad" style={{ padding: '26px 28px', display: 'flex', flexDirection: 'column', gap: 20 }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
           <span style={{ font: '800 26px Figtree', letterSpacing: '-0.01em' }}>Welcome to Midnight Lobby</span>
           <span style={{ font: '400 15px Figtree', color: 'oklch(0.72 0.01 270)' }}>
             Three girls run this server. You have one week.
           </span>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,minmax(0,1fr))', gap: 14 }}>
+        <div className="m-stack" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,minmax(0,1fr))', gap: 14 }}>
           {content.loveInterests.map((li) => {
             const P = person(content, state, li.id)
             return (

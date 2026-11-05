@@ -45,6 +45,7 @@ export function Chirp() {
   const endNight = () => dispatch({ type: 'endNight' })
   return (
     <div
+      className="m-chirp"
       style={{
         flex: 1,
         minHeight: 0,
@@ -53,9 +54,9 @@ export function Chirp() {
         background: 'oklch(0.205 0.01 270)',
       }}
     >
-      <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '16px 20px' }}>
+      <div className="m-chirp-side" style={{ display: 'flex', justifyContent: 'flex-end', padding: '16px 20px' }}>
         <div style={{ width: 240, display: 'flex', flexDirection: 'column', gap: 16 }}>
-          <div style={{ display: 'flex', gap: 10, alignItems: 'center', padding: '0 8px' }}>
+          <div className="m-hide" style={{ display: 'flex', gap: 10, alignItems: 'center', padding: '0 8px' }}>
             <div
               style={{
                 width: 44,
@@ -91,7 +92,7 @@ export function Chirp() {
               Whoever you like notices. So do the other two.
             </span>
           </div>
-          <div style={{ marginTop: 'auto', display: 'flex', gap: 10, alignItems: 'center', padding: 8 }}>
+          <div className="m-hide" style={{ marginTop: 'auto', display: 'flex', gap: 10, alignItems: 'center', padding: 8 }}>
             <div style={{ width: 40, height: 40, borderRadius: '50%', overflow: 'hidden', flex: 'none' }}>
               <Pic id="you" />
             </div>
@@ -147,9 +148,12 @@ export function Chirp() {
             Following
           </div>
         </div>
-        <div style={{ display: 'flex', gap: 6, alignItems: 'center', padding: '10px 14px', borderBottom: DIV, flex: 'none' }}>
+        <div
+          className="m-days"
+          style={{ display: 'flex', gap: 6, alignItems: 'center', padding: '10px 14px', borderBottom: DIV, flex: 'none' }}
+        >
           <span
-            className="hv-chirp"
+            className="hv-chirp m-hide"
             onClick={() => dispatch({ type: 'game', action: { type: 'stepFeedDay', delta: -1 } })}
             style={CHEVRON}
           >
@@ -205,7 +209,7 @@ export function Chirp() {
             ),
           )}
           <span
-            className="hv-chirp"
+            className="hv-chirp m-hide"
             onClick={() => dispatch({ type: 'game', action: { type: 'stepFeedDay', delta: 1 } })}
             style={CHEVRON}
           >
@@ -322,7 +326,7 @@ export function Chirp() {
           })}
         </div>
         {evening && (
-          <div style={BAR}>
+          <div className="m-wrap" style={BAR}>
             <Icon name="moon" style={{ fontSize: 20, color: 'oklch(0.8 0.1 230)' }} />
             <span style={{ font: '500 15px Figtree', flex: 1 }}>
               {g.likedToday ? "Like's spent. Time to log off." : 'Log off whenever you’re ready.'}
@@ -343,7 +347,7 @@ export function Chirp() {
           </div>
         )}
         {!evening && g.phase !== 'ending' && (
-          <div style={BAR}>
+          <div className="m-wrap" style={BAR}>
             <span style={{ font: '500 15px Figtree', flex: 1, color: 'oklch(0.78 0.01 270)' }}>
               {g.phase === 'confront' ? 'Someone is waiting on you.' : "Tonight's scenes aren't finished yet."}
             </span>
@@ -367,7 +371,7 @@ export function Chirp() {
         )}
       </div>
 
-      <div style={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: 16, maxWidth: 360 }}>
+      <div className="m-hide" style={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: 16, maxWidth: 360 }}>
         <div
           style={{
             height: 42,

@@ -16,10 +16,14 @@ const AV34: CSSProperties = { width: 34, height: 34, borderRadius: '50%', overfl
 const SUB: CSSProperties = { font: '400 12px Figtree', lineHeight: 1.35, color: 'oklch(0.68 0.01 270)' }
 
 export function MemberPanel({ model: m }: { model: LobbyModel }) {
-  const { state: g, dispatch, selectors } = useGame()
+  const { session, state: g, dispatch, selectors } = useGame()
   const content = selectors.content
   return (
-    <div style={{ background: 'oklch(0.21 0.01 270)', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
+    <div
+      className="m-members"
+      data-open={session.panel === 'members' || undefined}
+      style={{ background: 'oklch(0.21 0.01 270)', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}
+    >
       {m.inServer && (
         <div style={{ padding: '16px 8px', display: 'flex', flexDirection: 'column', gap: 2 }}>
           <div style={{ ...HEAD, padding: '4px 8px' }}>THE GIRLS — 3</div>

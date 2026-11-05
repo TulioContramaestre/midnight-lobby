@@ -58,6 +58,7 @@ export function Browser() {
     : '/home'
   return (
     <div
+      className="m-screen"
       style={{
         width: '100vw',
         height: '100vh',
@@ -73,7 +74,7 @@ export function Browser() {
       }}
     >
       <div style={{ height: 40, flex: 'none', display: 'flex', alignItems: 'flex-end', gap: 2, padding: '0 8px 0 12px' }}>
-        <div style={{ display: 'flex', gap: 8, alignItems: 'center', height: 40, padding: '0 10px 0 4px' }}>
+        <div className="m-hide" style={{ display: 'flex', gap: 8, alignItems: 'center', height: 40, padding: '0 10px 0 4px' }}>
           <span style={{ width: 12, height: 12, borderRadius: 6, background: 'oklch(0.65 0.18 25)' }} />
           <span style={{ width: 12, height: 12, borderRadius: 6, background: 'oklch(0.8 0.14 85)' }} />
           <span style={{ width: 12, height: 12, borderRadius: 6, background: 'oklch(0.72 0.15 150)' }} />
@@ -81,7 +82,7 @@ export function Browser() {
         {tabs.map((t) => (
           <div
             key={t.icon}
-            className="hv-tab"
+            className="hv-tab m-tab"
             onClick={t.open}
             style={{
               width: 240,
@@ -121,6 +122,7 @@ export function Browser() {
           </div>
         ))}
         <div
+          className="m-hide"
           style={{
             width: 28,
             height: 28,
@@ -136,6 +138,7 @@ export function Browser() {
         </div>
       </div>
       <div
+        className="m-chrome"
         style={{
           height: 40,
           flex: 'none',
@@ -148,10 +151,13 @@ export function Browser() {
           color: 'oklch(0.7 0.01 270)',
         }}
       >
-        <Icon name="arrow-left" style={{ fontSize: 18, padding: 4 }} />
-        <Icon name="arrow-right" style={{ fontSize: 18, padding: 4, opacity: 0.4 }} />
-        <Icon name="reload" style={{ fontSize: 18, padding: 4 }} />
+        <span className="m-hide" style={{ display: 'contents' }}>
+          <Icon name="arrow-left" style={{ fontSize: 18, padding: 4 }} />
+          <Icon name="arrow-right" style={{ fontSize: 18, padding: 4, opacity: 0.4 }} />
+          <Icon name="reload" style={{ fontSize: 18, padding: 4 }} />
+        </span>
         <div
+          className="m-urlbar"
           style={{
             flex: 1,
             height: 30,

@@ -12,6 +12,7 @@ export function AskOut() {
   const sub = cur.lines.find((l) => !l.speaker)?.text ?? ''
   return (
     <div
+      className="m-overlay"
       style={{
         position: 'absolute',
         inset: 0,
@@ -23,6 +24,7 @@ export function AskOut() {
       }}
     >
       <div
+        className="m-modal"
         style={{
           width: 820,
           borderRadius: 12,
@@ -41,7 +43,7 @@ export function AskOut() {
           <span style={{ font: '800 28px Figtree' }}>One message. Who gets it?</span>
           <span style={{ font: '400 15px Figtree', color: 'oklch(0.75 0.01 270)' }}>{sub}</span>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,minmax(0,1fr))', gap: 14 }}>
+        <div className="m-stack" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,minmax(0,1fr))', gap: 14 }}>
           {def.variant.choices.map((c, i) => {
             const pick = c.effects.find((e) => e.type === 'pickDate')
             if (!pick) return null
@@ -63,7 +65,7 @@ export function AskOut() {
                   boxShadow: 'inset 0 0 0 1px oklch(0.3 0.01 270)',
                 }}
               >
-                <div style={{ width: 112, height: 112, borderRadius: '50%', overflow: 'hidden' }}>
+                <div className="m-askpic" style={{ width: 112, height: 112, borderRadius: '50%', overflow: 'hidden' }}>
                   <Pic id={pick.who} mood={selectors.mood(g, pick.who)} />
                 </div>
                 <span style={{ font: '800 18px Figtree', color: NAMECOL[pick.who] }}>{name}</span>

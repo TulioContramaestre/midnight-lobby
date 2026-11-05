@@ -16,7 +16,7 @@ const DEFAULT_TOPIC: Record<string, string> = {
 }
 
 export function ChatColumn({ model: m }: { model: LobbyModel }) {
-  const { session, state: g, selectors } = useGame()
+  const { session, state: g, dispatch, selectors } = useGame()
   const content = selectors.content
   const logRef = useRef<HTMLDivElement>(null)
   const log = session.logs[session.loc] ?? []
@@ -60,6 +60,9 @@ export function ChatColumn({ model: m }: { model: LobbyModel }) {
           flex: 'none',
         }}
       >
+        <button className="m-only m-iconbtn" onClick={() => dispatch({ type: 'setPanel', panel: 'nav' })}>
+          <Icon name="menu-2" label="Channels and DMs" />
+        </button>
         {m.inServer && <Icon name="hash" style={{ fontSize: 22, color: 'oklch(0.6 0.01 270)' }} />}
         {m.locId && (
           <div
@@ -77,18 +80,27 @@ export function ChatColumn({ model: m }: { model: LobbyModel }) {
             <Pic id={m.locId} mood={locMood} />
           </div>
         )}
-        <span style={{ font: '700 15px Figtree' }}>{m.locName}</span>
+        <span className="m-title" style={{ font: '700 15px Figtree' }}>
+          {m.locName}
+        </span>
         {!!topic && (
-          <>
+          <span className="m-hide" style={{ display: 'contents' }}>
             <span style={{ width: 1, height: 20, background: 'oklch(0.35 0.01 270)' }} />
             <span style={{ font: '400 14px Figtree', color: 'oklch(0.68 0.01 270)' }}>{topic}</span>
-          </>
+          </span>
         )}
-        <div style={{ marginLeft: 'auto', display: 'flex', gap: 16, color: 'oklch(0.75 0 0)', fontSize: 20 }}>
+        <div className="m-hide" style={{ marginLeft: 'auto', display: 'flex', gap: 16, color: 'oklch(0.75 0 0)', fontSize: 20 }}>
           <Icon name="bell" />
           <Icon name="pin" />
           <Icon name="users" />
         </div>
+        <button
+          className="m-only m-iconbtn"
+          style={{ marginLeft: 'auto' }}
+          onClick={() => dispatch({ type: 'setPanel', panel: 'members' })}
+        >
+          <Icon name="users" label="Members" />
+        </button>
       </div>
       <div
         ref={logRef}

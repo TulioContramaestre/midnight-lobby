@@ -8,6 +8,7 @@ export function DaySummary() {
   const { session, state: g, dispatch, selectors } = useGame()
   return (
     <div
+      className="m-overlay"
       style={{
         position: 'absolute',
         inset: 0,
@@ -19,6 +20,7 @@ export function DaySummary() {
       }}
     >
       <div
+        className="m-modal"
         style={{
           width: 440,
           borderRadius: 12,

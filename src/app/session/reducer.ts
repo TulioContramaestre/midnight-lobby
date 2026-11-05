@@ -22,6 +22,7 @@ export function createSession(game: GameState): Session {
     typing: false,
     summary: false,
     profileOpen: false,
+    panel: null,
     daySnap: {},
   }
 }
@@ -70,6 +71,7 @@ export function createSessionReducer(content: ContentRegistry, reducer: Reducer,
     if (loc.startsWith('ch:')) x.lastCh = loc
     else x.lastDm = loc
     x.profileOpen = false
+    x.panel = null
   }
 
   function snap(x: Session): void {
@@ -201,6 +203,9 @@ export function createSessionReducer(content: ContentRegistry, reducer: Reducer,
 
       case 'toggleProfile':
         return { ...s, profileOpen: !s.profileOpen }
+
+      case 'setPanel':
+        return { ...s, panel: action.panel }
 
       case 'playAgain':
         return createSession(reducer(s.game, { type: 'reset', seed: action.seed }))

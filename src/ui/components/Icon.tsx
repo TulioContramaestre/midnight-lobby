@@ -26,6 +26,7 @@ import {
   IconLock,
   IconMessageCircle,
   IconMessages,
+  IconMenu2,
   IconMicrophone,
   IconMinus,
   IconMoon,
@@ -79,6 +80,7 @@ export type UiIconName =
   | 'lock'
   | 'message-circle'
   | 'messages'
+  | 'menu-2'
   | 'microphone'
   | 'minus'
   | 'moon'
@@ -127,6 +129,7 @@ const ICONS: Record<UiIconName, TablerIcon> = {
   lock: IconLock,
   'message-circle': IconMessageCircle,
   messages: IconMessages,
+  'menu-2': IconMenu2,
   microphone: IconMicrophone,
   minus: IconMinus,
   moon: IconMoon,

@@ -34,6 +34,7 @@ export function WeekRecap() {
   return (
     <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', background: 'oklch(0.245 0.01 270)' }}>
       <div
+        className="m-stack m-recap"
         style={{
           maxWidth: 1120,
           margin: '0 auto',

@@ -28,6 +28,7 @@ export function Desktop() {
   const tipFg = err && isCreate ? 'white' : isCreate && named ? ON_FG : 'oklch(0.9 0 0)'
   return (
     <div
+      className="m-screen"
       style={{
         width: '100vw',
         height: '100vh',
@@ -42,6 +43,7 @@ export function Desktop() {
       }}
     >
       <div
+        className="m-stage"
         style={{
           position: 'absolute',
           inset: '0 0 56px 0',
@@ -75,14 +77,16 @@ export function Desktop() {
               color: 'oklch(0.8 0.01 270)',
             }}
           >
-            <Icon name="user-circle" style={{ fontSize: 16, color: 'oklch(0.75 0.13 350)' }} />
-            New player
-            <div style={{ display: 'flex', gap: 6, alignItems: 'center', marginLeft: 14, font: '600 12px Figtree' }}>
+            <span className="m-hide" style={{ display: 'contents' }}>
+              <Icon name="user-circle" style={{ fontSize: 16, color: 'oklch(0.75 0.13 350)' }} />
+              New player
+            </span>
+            <div className="m-steps" style={{ display: 'flex', gap: 6, alignItems: 'center', marginLeft: 14, font: '600 12px Figtree' }}>
               <span style={{ ...PILL, ...(isIntro ? STEP_ON : STEP_OFF) }}>1 · Meet the lobby</span>
               <Icon name="chevron-right" style={{ fontSize: 12, color: 'oklch(0.5 0.01 270)' }} />
               <span style={{ ...PILL, ...(isCreate ? STEP_ON : STEP_OFF) }}>2 · Your profile</span>
             </div>
-            <div style={{ marginLeft: 'auto', display: 'flex' }}>
+            <div className="m-hide" style={{ marginLeft: 'auto', display: 'flex' }}>
               <span style={CONTROL}>
                 <Icon name="minus" />
               </span>
@@ -178,6 +182,7 @@ export function Desktop() {
             />
           </span>
           <div
+            className="m-tip"
             style={{
               position: 'absolute',
               bottom: 56,
@@ -208,6 +213,7 @@ export function Desktop() {
           </div>
         </div>
         <div
+          className="m-hide"
           style={{
             position: 'absolute',
             right: 16,

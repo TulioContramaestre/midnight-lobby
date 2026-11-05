@@ -23,6 +23,7 @@ export function Lobby({ model }: { model: LobbyModel }) {
   }, [])
   return (
     <div
+      className="m-lobby"
       style={{
         flex: 1,
         minHeight: 0,
@@ -32,10 +33,13 @@ export function Lobby({ model }: { model: LobbyModel }) {
         position: 'relative',
       }}
     >
-      <ServerRail model={model} />
-      <Sidebar model={model} />
+      <div className="m-nav" data-open={session.panel === 'nav' || undefined}>
+        <ServerRail model={model} />
+        <Sidebar model={model} />
+      </div>
       <ChatColumn model={model} />
       <MemberPanel model={model} />
+      {session.panel && <div className="m-scrim" onClick={() => dispatch({ type: 'setPanel', panel: null })} />}
       {session.profileOpen && <ProfilePopout />}
     </div>
   )

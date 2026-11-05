@@ -39,7 +39,7 @@ export function ComposerArea({ model: m }: { model: LobbyModel }) {
   const content = selectors.content
 
   let choices: { n: number; x: string; pick: () => void }[] = []
-  let choiceLabel = 'PICK A REPLY · PRESS 1–3'
+  let choiceLabel = 'PICK A REPLY'
   const choosingScene = g.phase === 'scene' && m.atScene && !m.pickScene
   if (choosingScene) choices = (selectors.currentScene(g)?.choices ?? []).map((x, i) => ({ n: i + 1, x, pick: () => pick(i) }))
   const confChoosing = m.confronting && !g.confrontation && session.loc === 'dm:' + g.pick
@@ -49,7 +49,7 @@ export function ComposerArea({ model: m }: { model: LobbyModel }) {
       x,
       pick: () => dispatch({ type: 'confPick', index: i }),
     }))
-    choiceLabel = 'SHE FOUND OUT · PRESS 1–3'
+    choiceLabel = 'SHE FOUND OUT'
   }
 
   const showEvActions = m.evening && !m.evDone && m.inGirlDm
@@ -103,10 +103,13 @@ export function ComposerArea({ model: m }: { model: LobbyModel }) {
   const endNight = () => dispatch({ type: 'endNight' })
 
   return (
-    <div style={{ padding: '0 16px 20px', display: 'flex', flexDirection: 'column', gap: 6, flex: 'none' }}>
+    <div className="m-composer" style={{ padding: '0 16px 20px', display: 'flex', flexDirection: 'column', gap: 6, flex: 'none' }}>
       {(choosingScene || confChoosing) && (
         <>
-          <div style={LABEL}>{choiceLabel}</div>
+          <div style={LABEL}>
+            {choiceLabel}
+            <span className="m-hide"> · PRESS 1–3</span>
+          </div>
           {choices.map((c) => (
             <div
               key={c.n}
@@ -180,7 +183,7 @@ export function ComposerArea({ model: m }: { model: LobbyModel }) {
               </span>
             </div>
           </div>
-          <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+          <div className="m-wrap" style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
             {content.loveInterests.map((li) => (
               <div
                 key={li.id}
@@ -221,9 +224,9 @@ export function ComposerArea({ model: m }: { model: LobbyModel }) {
         </div>
       )}
       {m.evDone && (
-        <div style={{ ...BLUE_CARD, display: 'flex', alignItems: 'center', gap: 12, padding: '12px 14px' }}>
+        <div className="m-wrap" style={{ ...BLUE_CARD, display: 'flex', alignItems: 'center', gap: 12, padding: '12px 14px' }}>
           <Icon name="moon" style={{ fontSize: 20, color: 'oklch(0.8 0.1 230)' }} />
-          <span style={{ font: '500 15px Figtree', flex: 1 }}>
+          <span className="m-full" style={{ font: '500 15px Figtree', flex: 1 }}>
             {g.likedToday ? "That's your night." : "That's your night. One last scroll before bed?"}
           </span>
           {!g.likedToday && (
@@ -251,6 +254,7 @@ export function ComposerArea({ model: m }: { model: LobbyModel }) {
         </div>
       )}
       <div
+        className="m-hide"
         style={{
           height: 44,
           borderRadius: 8,
